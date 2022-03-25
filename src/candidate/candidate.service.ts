@@ -1,8 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Candidate } from '.prisma/client';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateCandidateDto } from './dto';
 
 @Injectable()
 export class CandidateService {
-  async create() {
-    return 'new candidate';
+  constructor(private prisma: PrismaService) {}
+
+  async create(candidate: CreateCandidateDto): Promise<Candidate> {
+    try {
+      console.log(candidate);
+
+      const newCandidate = await this.prisma.candidate.create({
+        data: candidate,
+      });
+      return newCandidate;
+    } catch (err) {
+      console.log(err);
+      throw new BadRequestException(err.message);
+    }
   }
 }
