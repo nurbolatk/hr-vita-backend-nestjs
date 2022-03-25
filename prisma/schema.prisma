@@ -20,4 +20,20 @@ model User {
 
   firstName String?
   lastName String?
+
+
+  @@map("users")
+}
+
+model Candidate {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firstName String
+  lastName String
+
+  email String?
+
+  @@map("candidates")
 }
