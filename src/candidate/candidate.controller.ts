@@ -8,8 +8,6 @@ export class CandidateController {
 
   @Post()
   async create(@Body() candidate: CreateCandidateDto) {
-    console.log('hi', { candidate });
-
     return this.service.create(candidate);
   }
 }

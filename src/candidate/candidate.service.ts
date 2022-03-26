@@ -9,8 +9,6 @@ export class CandidateService {
 
   async create(candidate: CreateCandidateDto): Promise<Candidate> {
     try {
-      console.log(candidate);
-
       const newCandidate = await this.prisma.candidate.create({
         data: candidate,
       });
