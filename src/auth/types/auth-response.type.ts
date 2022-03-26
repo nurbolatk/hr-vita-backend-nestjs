@@ -1,6 +1,6 @@
 import { SafeUser } from '.';
 
 export type AuthResponse = {
-  accessToken: string;
+  token: string;
   user: SafeUser;
 };
