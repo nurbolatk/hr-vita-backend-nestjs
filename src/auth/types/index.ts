@@ -1,4 +1,2 @@
-export type Tokens = {
-  accessToken: string;
-  refreshRefresh: string;
-};
+export * from './auth-response.type';
+export * from './safe-user.type';
