@@ -10,30 +10,76 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Department {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  name      String
+  users     User[]
 
-  email String  @unique
-  hash  String?
+  @@map("departments")
+}
 
-  firstName String?
-  lastName  String?
+model Position {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  users     User[]
 
+  @@map("positions")
+}
+
+model User {
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  email        String      @unique
+  hash         String?
+  firstName    String?
+  lastName     String?
+  interviews   Interview[]
+  position     Position    @relation(fields: [positionId], references: [id])
+  positionId   Int
+  department   Department  @relation(fields: [departmentId], references: [id])
+  departmentId Int
 
   @@map("users")
 }
 
 model Candidate {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  firstName String
-  lastName  String
-
-  email String?
+  id         Int             @id @default(autoincrement())
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  firstName  String
+  lastName   String
+  email      String
+  phone      String?
+  salary     Int?
+  location   String?
+  status     CandidateStatus @default(NOT_STARTED)
+  interviews Interview[]
 
   @@map("candidates")
+}
+
+enum CandidateStatus {
+  NOT_STARTED
+  ONGOING
+  FAILED
+  HIRED
+}
+
+model Interview {
+  id            Int       @id @default(autoincrement())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  interviewee   Candidate @relation(fields: [intervieweeId], references: [id])
+  intervieweeId Int
+  datetime      DateTime
+  location      String
+  interviewer   User      @relation(fields: [interviewerId], references: [id])
+  interviewerId Int
+
+  @@map("interviews")
 }
