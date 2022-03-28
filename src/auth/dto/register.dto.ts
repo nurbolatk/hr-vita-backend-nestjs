@@ -1,4 +1,17 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+
+class CreatePositionDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+}
+
+class CreateDepartmentDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+}
 
 export class RegisterDto {
   @IsEmail()
@@ -16,4 +29,12 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   lastName: string;
+
+  @ValidateNested()
+  @Type(() => CreatePositionDto)
+  position: CreatePositionDto;
+
+  @ValidateNested()
+  @Type(() => CreateDepartmentDto)
+  department: CreateDepartmentDto;
 }

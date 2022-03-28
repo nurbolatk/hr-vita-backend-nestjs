@@ -45,6 +45,12 @@ export class AuthService {
         email: dto.email,
         firstName: dto.firstName,
         lastName: dto.lastName,
+        position: {
+          create: dto.position,
+        },
+        department: {
+          create: dto.department,
+        },
         hash,
       },
     });
