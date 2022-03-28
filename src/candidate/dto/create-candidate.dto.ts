@@ -1,4 +1,14 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsEmail,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { CreateDepartmentDto } from 'src/department/dto/createDepartment.dto';
+import { CreatePositionDto } from 'src/position/dto/create-position.dto';
 
 export class CreateCandidateDto {
   @IsString()
@@ -12,4 +22,28 @@ export class CreateCandidateDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
+
+  // @ValidateNested()
+  // @Type(() => CreatePositionDto)
+  @IsString()
+  @IsNotEmpty()
+  position: string;
+
+  // @ValidateNested()
+  // @Type(() => CreateDepartmentDto)
+  @IsString()
+  @IsNotEmpty()
+  department: string;
+
+  @IsInt()
+  @IsOptional()
+  salary?: number;
+
+  @IsString()
+  @IsOptional()
+  phone?: string;
+
+  @IsString()
+  @IsOptional()
+  location?: string;
 }

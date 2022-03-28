@@ -11,21 +11,23 @@ datasource db {
 }
 
 model Department {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  users     User[]
+  id         Int         @id @default(autoincrement())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  name       String
+  users      User[]
+  candidates Candidate[]
 
   @@map("departments")
 }
 
 model Position {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  users     User[]
+  id         Int         @id @default(autoincrement())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  name       String
+  users      User[]
+  candidates Candidate[]
 
   @@map("positions")
 }
@@ -48,17 +50,21 @@ model User {
 }
 
 model Candidate {
-  id         Int             @id @default(autoincrement())
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
-  firstName  String
-  lastName   String
-  email      String
-  phone      String?
-  salary     Int?
-  location   String?
-  status     CandidateStatus @default(NOT_STARTED)
-  interviews Interview[]
+  id           Int             @id @default(autoincrement())
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  firstName    String
+  lastName     String
+  email        String
+  phone        String?
+  salary       Int?
+  location     String?
+  status       CandidateStatus @default(NOT_STARTED)
+  interviews   Interview[]
+  position     Position        @relation(fields: [positionId], references: [id])
+  positionId   Int
+  department   Department      @relation(fields: [departmentId], references: [id])
+  departmentId Int
 
   @@map("candidates")
 }
