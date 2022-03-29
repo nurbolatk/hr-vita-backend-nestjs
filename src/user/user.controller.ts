@@ -28,4 +28,9 @@ export class UserController {
     // TODO: check if user has permissions
     return this.userService.setPassword(dto);
   }
+
+  @Get()
+  getAll() {
+    return this.userService.getAll();
+  }
 }

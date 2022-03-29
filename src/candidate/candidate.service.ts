@@ -32,6 +32,19 @@ export class CandidateService {
               },
             },
           },
+          interviews: {
+            create: (candidate.interviews ?? []).map((interview) => {
+              return {
+                interviewer: {
+                  connect: {
+                    id: interview.interviewerId,
+                  },
+                },
+                datetime: interview.datetime,
+                location: 'Almaty',
+              };
+            }),
+          },
         },
         include: {
           position: true,

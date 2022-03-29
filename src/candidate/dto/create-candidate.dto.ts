@@ -8,6 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { CreateDepartmentDto } from 'src/department/dto/createDepartment.dto';
+import { CreateInterviewDto } from 'src/interview/dto/create-interview.dto';
 import { CreatePositionDto } from 'src/position/dto/create-position.dto';
 
 export class CreateCandidateDto {
@@ -46,4 +47,11 @@ export class CreateCandidateDto {
   @IsString()
   @IsOptional()
   location?: string;
+
+  @ValidateNested({
+    each: true,
+  })
+  @Type(() => CreateInterviewDto)
+  @IsOptional()
+  interviews?: CreateInterviewDto[];
 }
