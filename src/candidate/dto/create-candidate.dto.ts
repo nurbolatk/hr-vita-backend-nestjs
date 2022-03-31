@@ -54,4 +54,8 @@ export class CreateCandidateDto {
   @Type(() => CreateInterviewDto)
   @IsOptional()
   interviews?: CreateInterviewDto[];
+
+  @IsInt()
+  @IsOptional()
+  documentId?: number;
 }

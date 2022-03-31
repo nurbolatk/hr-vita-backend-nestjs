@@ -9,46 +9,62 @@ export class CandidateService {
 
   async create(candidate: CreateCandidateDto): Promise<Candidate> {
     try {
-      const newCandidate = await this.prisma.candidate.create({
-        data: {
-          ...candidate,
-          position: {
-            connectOrCreate: {
-              where: {
-                name: candidate.position,
-              },
-              create: {
-                name: candidate.position,
-              },
+      const data = {
+        ...candidate,
+        position: {
+          connectOrCreate: {
+            where: {
+              name: candidate.position,
             },
-          },
-          department: {
-            connectOrCreate: {
-              where: {
-                name: candidate.department,
-              },
-              create: {
-                name: candidate.department,
-              },
+            create: {
+              name: candidate.position,
             },
-          },
-          interviews: {
-            create: (candidate.interviews ?? []).map((interview) => {
-              return {
-                interviewer: {
-                  connect: {
-                    id: interview.interviewerId,
-                  },
-                },
-                datetime: interview.datetime,
-                location: 'Almaty',
-              };
-            }),
           },
         },
+        department: {
+          connectOrCreate: {
+            where: {
+              name: candidate.department,
+            },
+            create: {
+              name: candidate.department,
+            },
+          },
+        },
+        interviews: {
+          create: (candidate.interviews ?? []).map((interview) => {
+            return {
+              interviewer: {
+                connect: {
+                  id: interview.interviewerId,
+                },
+              },
+              datetime: interview.datetime,
+              location: 'Almaty',
+            };
+          }),
+        },
+        documents: {
+          connect:
+            candidate.documentId === undefined
+              ? []
+              : [
+                  {
+                    id: candidate.documentId,
+                  },
+                ],
+        },
+      };
+
+      delete data.documentId;
+
+      const newCandidate = await this.prisma.candidate.create({
+        data,
         include: {
           position: true,
           department: true,
+          interviews: true,
+          documents: true,
         },
       });
       return newCandidate;
