@@ -7,6 +7,8 @@ import { CandidateModule } from './candidate/candidate.module';
 import { PositionModule } from './position/position.module';
 import { DepartmentModule } from './department/department.module';
 import { InterviewModule } from './interview/interview.module';
+import { DocumentsModule } from './documents/documents.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -20,6 +22,10 @@ import { InterviewModule } from './interview/interview.module';
     PositionModule,
     DepartmentModule,
     InterviewModule,
+    DocumentsModule,
+    MulterModule.register({
+      dest: './upload',
+    }),
   ],
 })
 export class AppModule {}
