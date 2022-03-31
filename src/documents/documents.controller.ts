@@ -12,9 +12,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
+import { DocumentsService } from './documents.service';
+import { CreateDocumentDto } from './dto/CreateDocument.dto';
+import { ReturnDocument } from './types/ReturnDocument.type';
 
 @Controller('documents')
 export class DocumentsController {
+  constructor(private service: DocumentsService) {}
+
   @Get(':filepath')
   getFile(
     @Param() { filepath }: { filepath: string },
@@ -48,7 +53,16 @@ export class DocumentsController {
       }),
     }),
   )
-  uploadFile(@UploadedFile() file: Express.Multer.File): Express.Multer.File {
-    return file;
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<ReturnDocument> {
+    const { originalname, size, path, mimetype } = file;
+    const newDoc = await this.service.createDocument(
+      new CreateDocumentDto(originalname, mimetype, path, size),
+    );
+    return {
+      ...file,
+      id: newDoc.id,
+    };
   }
 }

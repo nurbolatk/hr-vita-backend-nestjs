@@ -1,3 +1,4 @@
+import { Position } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePositionDto } from './dto/create-position.dto';
@@ -10,7 +11,7 @@ export class PositionService {
     return this.prisma.position.findMany();
   }
 
-  async createPosition(dto: CreatePositionDto) {
+  async createPosition(dto: CreatePositionDto): Promise<Position> {
     return this.prisma.position.create({
       data: dto,
     });

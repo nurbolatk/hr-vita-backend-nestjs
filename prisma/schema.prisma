@@ -32,6 +32,26 @@ model Position {
   @@map("positions")
 }
 
+enum Role {
+  HR
+  USER
+  ADMIN
+}
+
+model Document {
+  id           Int       @id @default(autoincrement())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  originalname String
+  mimetype     String
+  path         String
+  size         Int
+  user         User?      @relation(fields: [userId], references: [id])
+  userId       Int?
+  candidate    Candidate? @relation(fields: [candidateId], references: [id])
+  candidateId  Int?
+}
+
 model User {
   id           Int         @id @default(autoincrement())
   createdAt    DateTime    @default(now())
@@ -45,6 +65,8 @@ model User {
   positionId   Int
   department   Department  @relation(fields: [departmentId], references: [id])
   departmentId Int
+  role         Role        @default(USER)
+  documents    Document[]
 
   @@map("users")
 }
@@ -65,6 +87,7 @@ model Candidate {
   positionId   Int
   department   Department      @relation(fields: [departmentId], references: [id])
   departmentId Int
+  documents    Document[]
 
   @@map("candidates")
 }
