@@ -22,6 +22,7 @@ async function main() {
           name: 'HR Department',
         },
       },
+      role: 'HR',
     },
   });
 

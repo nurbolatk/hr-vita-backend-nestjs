@@ -1,8 +1,9 @@
-import { User } from '.prisma/client';
+import { Candidate, User } from '.prisma/client';
 import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -22,5 +23,10 @@ export class CandidateController {
       return this.service.create(candidate);
     }
     throw new ForbiddenException('You are not allowed');
+  }
+
+  @Get()
+  async getAll(): Promise<Candidate[]> {
+    return this.service.getAll();
   }
 }

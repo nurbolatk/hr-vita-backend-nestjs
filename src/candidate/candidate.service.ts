@@ -73,4 +73,8 @@ export class CandidateService {
       throw new BadRequestException(err.message);
     }
   }
+
+  async getAll() {
+    return this.prisma.candidate.findMany();
+  }
 }
