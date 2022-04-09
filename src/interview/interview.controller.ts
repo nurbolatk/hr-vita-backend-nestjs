@@ -26,6 +26,12 @@ export class InterviewController {
     return this.service.getAll(intervieweeId);
   }
 
+  @Get(':id')
+  async getOneById(@Param() params): Promise<Interview> {
+    const id = parseInt(params.id as string);
+    return this.service.getOneById(id);
+  }
+
   @Put(':id')
   async update(
     @Param() params,

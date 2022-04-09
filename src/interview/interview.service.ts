@@ -19,6 +19,11 @@ export class InterviewService {
             position: true,
           },
         },
+        interviewer: {
+          include: {
+            position: true,
+          },
+        },
       },
     });
     this.notificationsService.createNotification({
@@ -49,8 +54,34 @@ export class InterviewService {
         },
       ],
       include: {
-        interviewee: true,
-        interviewer: true,
+        interviewee: {
+          include: {
+            position: true,
+          },
+        },
+        interviewer: {
+          include: {
+            position: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getOneById(id: number) {
+    return this.prisma.interview.findUnique({
+      where: { id },
+      include: {
+        interviewee: {
+          include: {
+            position: true,
+          },
+        },
+        interviewer: {
+          include: {
+            position: true,
+          },
+        },
       },
     });
   }
