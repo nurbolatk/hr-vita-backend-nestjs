@@ -1,5 +1,5 @@
-import type { User, Notifications } from '.prisma/client';
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import type { User, Notification } from '.prisma/client';
+import { Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { NotificationsService } from './notifications.service';
@@ -10,7 +10,7 @@ export class NotificationsController {
 
   @UseGuards(JwtGuard)
   @Get()
-  async getAll(@GetUser() user: User): Promise<Notifications[]> {
+  async getAll(@GetUser() user: User): Promise<Notification[]> {
     return this.service.getAll(user.id);
   }
 

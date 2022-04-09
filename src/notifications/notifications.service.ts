@@ -7,8 +7,8 @@ export class NotificationsService {
   constructor(private prisma: PrismaService) {}
 
   async createNotification(data: CreateNotificationDTO) {
-    const { receiverId, ...rest } = data;
-    return this.prisma.notifications.create({
+    const { receiverId, linkAction, ...rest } = data;
+    return this.prisma.notification.create({
       data: {
         ...rest,
         receiver: {
@@ -16,20 +16,31 @@ export class NotificationsService {
             id: receiverId,
           },
         },
+        linkAction: linkAction
+          ? {
+              create: linkAction,
+            }
+          : undefined,
+      },
+      include: {
+        linkAction: true,
       },
     });
   }
 
   async getAll(userId: number) {
-    return this.prisma.notifications.findMany({
+    return this.prisma.notification.findMany({
       where: {
         receiverId: userId,
+      },
+      include: {
+        linkAction: true,
       },
     });
   }
 
   async markRead(id: number) {
-    return this.prisma.notifications.update({
+    return this.prisma.notification.update({
       where: {
         id,
       },

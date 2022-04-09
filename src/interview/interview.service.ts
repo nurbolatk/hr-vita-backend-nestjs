@@ -27,6 +27,10 @@ export class InterviewService {
       Вы назначены в качестве интвервьюера нового кандидата ${interview.interviewee.firstName} ${interview.interviewee.lastName} на позицию ${interview.interviewee.position.name}. Интервью пройдет в ${interview.location} в ${interview.date} с ${interview.start} до ${interview.end}
       `,
       receiverId: data.interviewerId,
+      linkAction: {
+        to: `/interviews/${interview.id}`,
+        label: 'More',
+      },
     });
     return interview;
   }
