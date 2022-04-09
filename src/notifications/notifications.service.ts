@@ -19,4 +19,23 @@ export class NotificationsService {
       },
     });
   }
+
+  async getAll(userId: number) {
+    return this.prisma.notifications.findMany({
+      where: {
+        receiverId: userId,
+      },
+    });
+  }
+
+  async markRead(id: number) {
+    return this.prisma.notifications.update({
+      where: {
+        id,
+      },
+      data: {
+        unread: false,
+      },
+    });
+  }
 }
