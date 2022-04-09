@@ -4,13 +4,17 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  NotFoundException,
+  Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { CandidateService } from './candidate.service';
 import { CreateCandidateDto } from './dto';
+import { UpdateCandidateDTO } from './dto/update-candidate.dto';
 
 @Controller('candidate')
 export class CandidateController {
@@ -28,5 +32,30 @@ export class CandidateController {
   @Get()
   async getAll(): Promise<Candidate[]> {
     return this.service.getAll();
+  }
+
+  @Get(':id')
+  async getOneById(@Param() params): Promise<Candidate> {
+    const id = parseInt(params.id as string);
+    if (isNaN(id)) {
+      throw new NotFoundException(
+        'Could not find a candidate with id ' + params.id,
+      );
+    }
+    return this.service.getOneById(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param() params,
+    @Body() data: UpdateCandidateDTO,
+  ): Promise<Candidate> {
+    const id = parseInt(params.id as string);
+    if (isNaN(id)) {
+      throw new NotFoundException(
+        'Could not find a candidate with id ' + params.id,
+      );
+    }
+    return this.service.update(id, data);
   }
 }
