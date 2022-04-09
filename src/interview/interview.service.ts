@@ -11,4 +11,31 @@ export class InterviewService {
       data,
     });
   }
+
+  async getAll(intervieweeId: number) {
+    return this.prisma.interview.findMany({
+      where: {
+        intervieweeId,
+      },
+      orderBy: [
+        {
+          date: 'asc',
+        },
+        {
+          start: 'asc',
+        },
+      ],
+      include: {
+        interviewee: true,
+        interviewer: true,
+      },
+    });
+  }
+
+  async update(id: number, data: CreateInterviewDto) {
+    return this.prisma.interview.update({
+      where: { id },
+      data,
+    });
+  }
 }
