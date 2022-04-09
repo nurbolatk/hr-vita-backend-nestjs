@@ -53,20 +53,21 @@ model Document {
 }
 
 model User {
-  id           Int         @id @default(autoincrement())
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  email        String      @unique
-  hash         String?
-  firstName    String?
-  lastName     String?
-  interviews   Interview[]
-  position     Position    @relation(fields: [positionId], references: [id])
-  positionId   Int
-  department   Department  @relation(fields: [departmentId], references: [id])
-  departmentId Int
-  role         Role        @default(USER)
-  documents    Document[]
+  id            Int             @id @default(autoincrement())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  email         String          @unique
+  hash          String?
+  firstName     String?
+  lastName      String?
+  interviews    Interview[]
+  position      Position        @relation(fields: [positionId], references: [id])
+  positionId    Int
+  department    Department      @relation(fields: [departmentId], references: [id])
+  departmentId  Int
+  role          Role            @default(USER)
+  documents     Document[]
+  notifications Notifications[]
 
   @@map("users")
 }
@@ -100,18 +101,38 @@ enum CandidateStatus {
 }
 
 model Interview {
-  id            Int       @id @default(autoincrement())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id            Int             @id @default(autoincrement())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   name          String
-  interviewee   Candidate @relation(fields: [intervieweeId], references: [id])
+  interviewee   Candidate       @relation(fields: [intervieweeId], references: [id])
   intervieweeId Int
   date          DateTime
   start         DateTime
   end           DateTime
   location      String
-  interviewer   User      @relation(fields: [interviewerId], references: [id])
+  interviewer   User            @relation(fields: [interviewerId], references: [id])
   interviewerId Int
+  status        InterviewStatus @default(NOT_STARTED)
 
   @@map("interviews")
+}
+
+enum InterviewStatus {
+  NOT_STARTED
+  FAILED
+  PASSED
+}
+
+model Notifications {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  title      String
+  content    String
+  unread     Boolean  @default(true)
+  receiver   User     @relation(fields: [receiverId], references: [id])
+  receiverId Int
+
+  @@map("notifications")
 }

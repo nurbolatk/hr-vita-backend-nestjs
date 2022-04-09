@@ -38,4 +38,10 @@ export class InterviewService {
       data,
     });
   }
+
+  async delete(id: number) {
+    return this.prisma.interview.delete({
+      where: { id },
+    });
+  }
 }

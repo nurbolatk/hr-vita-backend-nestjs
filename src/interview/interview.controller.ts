@@ -1,5 +1,13 @@
 import { Interview } from '.prisma/client';
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CreateInterviewDto } from './dto/create-interview.dto';
 import { InterviewService } from './interview.service';
 
@@ -25,5 +33,11 @@ export class InterviewController {
   ): Promise<Interview> {
     const id = parseInt(params.id as string);
     return this.service.update(id, dto);
+  }
+
+  @Delete(':id')
+  async delete(@Param() params): Promise<Interview> {
+    const id = parseInt(params.id as string);
+    return this.service.delete(id);
   }
 }
