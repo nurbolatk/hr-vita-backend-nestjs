@@ -39,9 +39,9 @@ enum Role {
 }
 
 model Document {
-  id           Int       @id @default(autoincrement())
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   originalname String
   mimetype     String
   path         String
@@ -103,9 +103,12 @@ model Interview {
   id            Int       @id @default(autoincrement())
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  name          String
   interviewee   Candidate @relation(fields: [intervieweeId], references: [id])
   intervieweeId Int
-  datetime      DateTime
+  date          DateTime
+  start         DateTime
+  end           DateTime
   location      String
   interviewer   User      @relation(fields: [interviewerId], references: [id])
   interviewerId Int
