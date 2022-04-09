@@ -9,6 +9,7 @@ import { DepartmentModule } from './department/department.module';
 import { InterviewModule } from './interview/interview.module';
 import { DocumentsModule } from './documents/documents.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MulterModule } from '@nestjs/platform-express';
     MulterModule.register({
       dest: './upload',
     }),
+    NotificationsModule,
   ],
 })
 export class AppModule {}

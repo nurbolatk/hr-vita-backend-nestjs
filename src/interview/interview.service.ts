@@ -1,15 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateInterviewDto } from './dto/create-interview.dto';
 
 @Injectable()
 export class InterviewService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationsService: NotificationsService,
+  ) {}
 
   async createInterviews(data: CreateInterviewDto) {
-    return this.prisma.interview.create({
+    const interview = await this.prisma.interview.create({
       data,
+      include: {
+        interviewee: {
+          include: {
+            position: true,
+          },
+        },
+      },
     });
+    this.notificationsService.createNotification({
+      title: 'Вы будете проводить интервью!',
+      content: `
+      Вы назначены в качестве интвервьюера нового кандидата ${interview.interviewee.firstName} ${interview.interviewee.lastName} на позицию ${interview.interviewee.position.name}. Интервью пройдет в ${interview.location} в ${interview.date} с ${interview.start} до ${interview.end}
+      `,
+      receiverId: data.interviewerId,
+    });
+    return interview;
   }
 
   async getAll(intervieweeId: number) {
