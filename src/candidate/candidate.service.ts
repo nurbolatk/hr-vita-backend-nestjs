@@ -134,6 +134,9 @@ export class CandidateService {
               },
             },
           },
+          documents: {
+            set: form.documentId ? [{ id: form.documentId }] : [],
+          },
         },
       });
       updates.push(formUpdate);
@@ -163,10 +166,7 @@ export class CandidateService {
       updates.push(interviewsUpdate);
     }
 
-    // interviews[] $transaction
-    // documentId: if null, deleteMany || set[]
-    // else replace
-    const [candidate] = await Promise.all(updates);
+    const [, candidate] = await Promise.all(updates);
     return candidate;
   }
 }

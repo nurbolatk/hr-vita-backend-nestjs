@@ -40,6 +40,10 @@ export class UpdateCandidateFormDTO {
   @IsString()
   @IsOptional()
   department?: string;
+
+  @IsInt()
+  @IsOptional()
+  documentId?: number;
 }
 
 export class UpdateCandidateDTO {
@@ -55,9 +59,3 @@ export class UpdateCandidateDTO {
   @IsOptional()
   interviews?: CreateInterviewDto[];
 }
-
-// {
-//   @IsInt()
-//   @IsOptional()
-//   documentId?: number;
-// }
