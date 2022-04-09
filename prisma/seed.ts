@@ -270,7 +270,10 @@ async function interviews() {
           email: 'daulet@gmail.com',
         },
       },
-      datetime: new Date(),
+      date: new Date(),
+      start: new Date(),
+      end: new Date(),
+      name: 'First HR interview',
     },
   });
 }
