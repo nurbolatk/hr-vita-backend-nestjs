@@ -290,6 +290,7 @@ async function documents() {
     update: {},
     create: {
       originalname: 'quote.jpeg',
+      name: 'Photo',
       mimetype: 'image/jpeg',
       path: 'uploads/file_1649397262368.jpeg',
       size: 87460,

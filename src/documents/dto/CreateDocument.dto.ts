@@ -6,16 +6,22 @@ export class CreateDocumentDto {
     mimetype: string,
     path: string,
     size: number,
+    name: string,
   ) {
     this.originalname = originalname;
     this.mimetype = mimetype;
     this.path = path;
     this.size = size;
+    this.name = name;
   }
 
   @IsString()
   @IsNotEmpty()
   originalname: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
   @IsString()
   @IsNotEmpty()

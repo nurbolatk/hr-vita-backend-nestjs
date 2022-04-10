@@ -7,6 +7,7 @@ import {
   UseInterceptors,
   Response,
   Param,
+  Body,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
@@ -55,10 +56,12 @@ export class DocumentsController {
   )
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
+    @Body() body: { name: string },
   ): Promise<ReturnDocument> {
     const { originalname, size, path, mimetype } = file;
+
     const newDoc = await this.service.createDocument(
-      new CreateDocumentDto(originalname, mimetype, path, size),
+      new CreateDocumentDto(originalname, mimetype, path, size, body.name),
     );
     return {
       ...file,
