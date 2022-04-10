@@ -110,6 +110,8 @@ async function employees() {
       firstName: 'Абылай',
       lastName: 'Абкенов',
       hash,
+      salary: 500000,
+
       position: {
         connect: {
           id: 8,
@@ -131,6 +133,7 @@ async function employees() {
       firstName: 'Nurbolat',
       lastName: 'Kenzhekulov',
       hash,
+      salary: 500000,
       position: {
         connect: {
           id: 1,
@@ -153,6 +156,7 @@ async function employees() {
       firstName: 'Даулет',
       lastName: 'Дауренов',
       hash,
+      salary: 500000,
       position: {
         connect: {
           id: 3,
@@ -174,6 +178,7 @@ async function employees() {
       firstName: 'Жандос',
       lastName: 'Жексенов',
       hash,
+      salary: 500000,
       position: {
         connect: {
           id: 5,
@@ -195,6 +200,7 @@ async function employees() {
       firstName: 'Торегали',
       lastName: 'Тореали',
       hash,
+      salary: 500000,
       position: {
         connect: {
           id: 7,

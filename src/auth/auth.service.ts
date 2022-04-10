@@ -38,30 +38,30 @@ export class AuthService {
     };
   }
 
-  async register(dto: RegisterDto): Promise<AuthResponse> {
-    const hash: string = await argon.hash(dto.password);
-    const user: User = await this.prisma.user.create({
-      data: {
-        email: dto.email,
-        firstName: dto.firstName,
-        lastName: dto.lastName,
-        position: {
-          create: dto.position,
-        },
-        department: {
-          create: dto.department,
-        },
-        hash,
-      },
-    });
+  // async register(dto: RegisterDto): Promise<AuthResponse> {
+  //   const hash: string = await argon.hash(dto.password);
+  //   const user: User = await this.prisma.user.create({
+  //     data: {
+  //       email: dto.email,
+  //       firstName: dto.firstName,
+  //       lastName: dto.lastName,
+  //       position: {
+  //         create: dto.position,
+  //       },
+  //       department: {
+  //         create: dto.department,
+  //       },
+  //       hash,
+  //     },
+  //   });
 
-    const token = await this.signToken(user.id, user.email);
-    delete user.hash;
-    return {
-      token,
-      user,
-    };
-  }
+  //   const token = await this.signToken(user.id, user.email);
+  //   delete user.hash;
+  //   return {
+  //     token,
+  //     user,
+  //   };
+  // }
 
   private async signToken(userId: number, email: string): Promise<string> {
     const payload = {

@@ -6,10 +6,10 @@ import { RegisterDto, SigninDto } from './dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('register')
-  register(@Body() dto: RegisterDto) {
-    return this.authService.register(dto);
-  }
+  // @Post('register')
+  // register(@Body() dto: RegisterDto) {
+  //   return this.authService.register(dto);
+  // }
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')

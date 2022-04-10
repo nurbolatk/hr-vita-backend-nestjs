@@ -59,9 +59,12 @@ model User {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   email         String         @unique
-  hash          String?
-  firstName     String?
-  lastName      String?
+  hash          String
+  firstName     String
+  lastName      String
+  salary        Int
+  phone         String?
+  location      String?
   interviews    Interview[]
   position      Position       @relation(fields: [positionId], references: [id])
   positionId    Int
@@ -70,8 +73,18 @@ model User {
   role          Role           @default(USER)
   documents     Document[]
   notifications Notification[]
+  status        UserStatus     @default(NOT_ACCEPTED)
+  supervisor    User?          @relation("Supervisor", fields: [supervisorId], references: [id])
+  supervisorId  Int?
+  supervisee    User[]         @relation("Supervisor")
 
   @@map("users")
+}
+
+enum UserStatus {
+  NOT_ACCEPTED
+  WORKING
+  FIRED
 }
 
 model Candidate {
