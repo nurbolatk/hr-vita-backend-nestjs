@@ -127,11 +127,9 @@ export class InterviewService {
         },
       },
     });
-    console.log({ old, updated });
 
     if (updated.interviewerId !== old.interviewerId) {
       // send 2 notifs
-      console.log('a');
       this.notificationsService.createNotification({
         title: 'Вы сняты с проведения интервью',
         content: `
@@ -163,7 +161,6 @@ export class InterviewService {
         },
       });
     } else {
-      console.log('b');
       this.notificationsService.createNotification({
         title: 'Детали интервью изменены',
         content: `

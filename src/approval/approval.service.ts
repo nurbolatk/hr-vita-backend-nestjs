@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { Approval } from '@prisma/client';
+import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateApprovalDTO, UpdateApprovalDTO } from './dto';
 
 @Injectable()
 export class ApprovalService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationsService: NotificationsService,
+  ) {}
 
   async createMany(many: CreateApprovalDTO[]): Promise<Approval[]> {
     return Promise.all(
-      many.map((data) =>
-        this.prisma.approval.create({
+      many.map(async (data) => {
+        const approval = await this.prisma.approval.create({
           data: {
             status: data.status,
             department: {
@@ -31,8 +35,30 @@ export class ApprovalService {
               },
             },
           },
-        }),
-      ),
+          include: {
+            candidate: {
+              include: {
+                position: true,
+              },
+            },
+          },
+        });
+        if (data.masterId) {
+          this.notificationsService.createNotification({
+            title:
+              'Вам нужно согласовать введение в должность нового сотрудника',
+            content: `
+          Вам нужно согласовать введение в должность нового сотрудника ${approval.candidate.firstName} ${approval.candidate.lastName} на позицию ${approval.candidate.position.name}.
+      `,
+            receiverId: data.masterId,
+            linkAction: {
+              to: `/approvals/${approval.id}`,
+              label: 'More',
+            },
+          });
+        }
+        return approval;
+      }),
     );
   }
 
@@ -60,7 +86,7 @@ export class ApprovalService {
   }
 
   async update(id: number, data: UpdateApprovalDTO) {
-    return this.prisma.approval.update({
+    const approval = await this.prisma.approval.update({
       where: { id },
       data: {
         status: data.status,
@@ -79,6 +105,27 @@ export class ApprovalService {
             }
           : undefined,
       },
+      include: {
+        candidate: {
+          include: {
+            position: true,
+          },
+        },
+      },
     });
+    if (data.masterId) {
+      this.notificationsService.createNotification({
+        title: 'Вам нужно согласовать введение в должность нового сотрудника',
+        content: `
+      Вам нужно согласовать введение в должность нового сотрудника ${approval.candidate.firstName} ${approval.candidate.lastName} на позицию ${approval.candidate.position.name}.
+  `,
+        receiverId: data.masterId,
+        linkAction: {
+          to: `/approvals/${approval.id}`,
+          label: 'More',
+        },
+      });
+    }
+    return approval;
   }
 }

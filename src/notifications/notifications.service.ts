@@ -36,14 +36,9 @@ export class NotificationsService {
       include: {
         linkAction: true,
       },
-      orderBy: [
-        {
-          unread: 'desc',
-        },
-        {
-          updatedAt: 'desc',
-        },
-      ],
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 
