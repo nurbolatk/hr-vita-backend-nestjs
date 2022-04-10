@@ -15,7 +15,7 @@ export class ApprovalController {
   @Get('candidate/:candidateId')
   getOnByCandidateId(@Param() params): Promise<Approval[]> {
     const candidateId = parseInt(params.candidateId as string);
-    return this.service.getOnByCandidateId(candidateId);
+    return this.service.getOneByCandidateId(candidateId);
   }
 
   @Put(':id')
@@ -25,5 +25,11 @@ export class ApprovalController {
   ): Promise<Approval> {
     const id = parseInt(params.id as string);
     return this.service.update(id, body);
+  }
+
+  @Get(':id')
+  async getOneById(@Param() params): Promise<Approval> {
+    const id = parseInt(params.id as string);
+    return this.service.getOneById(id);
   }
 }

@@ -62,10 +62,33 @@ export class ApprovalService {
     );
   }
 
-  async getOnByCandidateId(candidateId: number) {
+  async getOneByCandidateId(candidateId: number) {
     return this.prisma.approval.findMany({
       where: {
         candidateId,
+      },
+      include: {
+        department: true,
+        master: {
+          include: {
+            position: true,
+            department: true,
+          },
+        },
+        candidate: {
+          include: {
+            position: true,
+            department: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getOneById(id: number) {
+    return this.prisma.approval.findUnique({
+      where: {
+        id,
       },
       include: {
         department: true,
