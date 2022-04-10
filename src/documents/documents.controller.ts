@@ -28,7 +28,9 @@ export class DocumentsController {
   ): StreamableFile {
     console.log(filepath);
 
-    const file = createReadStream(join(process.cwd(), './uploads/' + filepath));
+    const file = createReadStream(
+      join(process.cwd(), './documents/' + filepath),
+    );
     res.set({
       'Content-Type': 'application/json',
       'Content-Disposition': 'attachment; filename="' + filepath + '"',
@@ -39,10 +41,10 @@ export class DocumentsController {
   @Post('upload')
   @UseInterceptors(
     FileInterceptor('file', {
-      dest: './uploads',
+      dest: './documents',
       preservePath: true,
       storage: diskStorage({
-        destination: './uploads',
+        destination: './documents',
         filename: function (req, file, callback) {
           console.log(file);
 
