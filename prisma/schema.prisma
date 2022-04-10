@@ -17,6 +17,7 @@ model Department {
   name       String      @unique
   users      User[]
   candidates Candidate[]
+  approvals  Approval[]
 
   @@map("departments")
 }
@@ -55,28 +56,30 @@ model Document {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  email         String         @unique
-  hash          String
-  firstName     String
-  lastName      String
-  salary        Int
-  phone         String?
-  location      String?
-  interviews    Interview[]
-  position      Position       @relation(fields: [positionId], references: [id])
-  positionId    Int
-  department    Department     @relation(fields: [departmentId], references: [id])
-  departmentId  Int
-  role          Role           @default(USER)
-  documents     Document[]
-  notifications Notification[]
-  status        UserStatus     @default(NOT_ACCEPTED)
-  supervisor    User?          @relation("Supervisor", fields: [supervisorId], references: [id])
-  supervisorId  Int?
-  supervisee    User[]         @relation("Supervisor")
+  id                 Int            @id @default(autoincrement())
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  email              String         @unique
+  hash               String
+  firstName          String
+  lastName           String
+  salary             Int
+  phone              String?
+  location           String?
+  interviews         Interview[]
+  position           Position       @relation(fields: [positionId], references: [id])
+  positionId         Int
+  department         Department     @relation(fields: [departmentId], references: [id])
+  departmentId       Int
+  role               Role           @default(USER)
+  documents          Document[]
+  notifications      Notification[]
+  status             UserStatus     @default(NOT_ACCEPTED)
+  supervisor         User?          @relation("Supervisor", fields: [supervisorId], references: [id])
+  supervisorId       Int?
+  supervisee         User[]         @relation("Supervisor")
+  masteringApprovals Approval[]     @relation("master")
+  myApprovals        Approval[]     @relation("candidate")
 
   @@map("users")
 }
@@ -85,6 +88,27 @@ enum UserStatus {
   NOT_ACCEPTED
   WORKING
   FIRED
+}
+
+model Approval {
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  department   Department     @relation(fields: [departmentId], references: [id])
+  departmentId Int
+  master       User           @relation("master", fields: [masterId], references: [id])
+  masterId     Int
+  candidate    User           @relation("candidate", fields: [candidateId], references: [id])
+  candidateId  Int
+  status       ApprovalStatus
+
+  @@map("approvals")
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Candidate {

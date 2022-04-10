@@ -35,7 +35,7 @@ async function departments() {
     where: { id: 5 },
     update: {},
     create: {
-      name: 'Отдел безопасности',
+      name: 'Отдел СБ',
     },
   });
 }
@@ -87,7 +87,7 @@ async function positions() {
     where: { id: 7 },
     update: {},
     create: {
-      name: 'Начальник охраны',
+      name: 'Начальник СБ',
     },
   });
   await prisma.position.upsert({
