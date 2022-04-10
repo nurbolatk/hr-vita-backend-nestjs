@@ -97,10 +97,11 @@ export class UserService {
         },
       ]);
     }
+    return user;
   }
 
   private async parseData(data: CreateUserDTO) {
-    const { position, department, supervisorId, documentId, ...rest } = data;
+    const { position, department, supervisorId, documents, ...rest } = data;
     const hash = await argon.hash('asdfasdf');
     const role = position.toLowerCase().includes('hr') ? Role.HR : Role.USER;
     return {
@@ -132,21 +133,16 @@ export class UserService {
           id: supervisorId,
         },
       },
-      documents: {
-        connect:
-          documentId === null
-            ? []
-            : [
-                {
-                  id: documentId ?? undefined,
-                },
-              ],
-      },
+      documents: documents
+        ? {
+            connect: documents.map((id) => ({ id })),
+          }
+        : [],
     };
   }
 
   async updateUser(id: number, data: CreateUserDTO) {
-    const { position, department, supervisorId, documentId, ...rest } = data;
+    const { position, department, supervisorId, documents, ...rest } = data;
     return this.prisma.user.update({
       where: {
         id,
@@ -179,14 +175,7 @@ export class UserService {
           },
         },
         documents: {
-          connect:
-            documentId === null
-              ? []
-              : [
-                  {
-                    id: documentId ?? undefined,
-                  },
-                ],
+          set: documents.map((id) => ({ id })),
         },
       },
     });

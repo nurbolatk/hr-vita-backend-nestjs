@@ -1,5 +1,6 @@
 import { UserStatus } from '.prisma/client';
 import {
+  IsArray,
   IsEnum,
   IsInt,
   IsNotEmpty,
@@ -26,11 +27,11 @@ export class CreateUserDTO {
 
   @IsString()
   @IsOptional()
-  phone: string;
+  phone?: string;
 
   @IsString()
   @IsOptional()
-  location: string;
+  location?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -47,7 +48,7 @@ export class CreateUserDTO {
   @IsNotEmpty()
   status: UserStatus;
 
-  @IsInt()
+  @IsArray()
   @IsOptional()
-  documentId: number;
+  documents?: number[];
 }
