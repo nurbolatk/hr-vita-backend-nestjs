@@ -100,9 +100,8 @@ export class CandidateService {
 
   async update(id: number, body: UpdateCandidateDTO) {
     const { form, interviews, documents } = body;
-    console.log({ documents });
 
-    const updates = [];
+    const updates: Promise<Candidate>[] = [];
     let data: any = {};
     if (form) {
       data = {
@@ -140,42 +139,66 @@ export class CandidateService {
         set: documents.map((id) => ({ id })),
       };
     }
-    console.log(data);
 
-    const formUpdate = this.prisma.candidate.update({
+    const formUpdate: Promise<Candidate> = this.prisma.candidate.update({
       where: { id },
       data,
+      include: {
+        position: true,
+        department: true,
+        interviews: {
+          include: {
+            interviewer: true,
+            interviewee: true,
+          },
+        },
+        documents: true,
+      },
     });
     updates.push(formUpdate);
     if (interviews) {
-      const interviewsUpdate = this.prisma.candidate.update({
-        where: {
-          id,
-        },
-        data: {
-          interviews: {
-            deleteMany: {},
-            create: (interviews ?? []).map((interview) => {
-              return {
-                interviewer: {
-                  connect: {
-                    id: interview.interviewerId,
+      const interviewsUpdate: Promise<Candidate> = this.prisma.candidate.update(
+        {
+          where: {
+            id,
+          },
+          data: {
+            interviews: {
+              deleteMany: {},
+              create: (interviews ?? []).map((interview) => {
+                return {
+                  interviewer: {
+                    connect: {
+                      id: interview.interviewerId,
+                    },
                   },
-                },
-                date: interview.date,
-                location: interview.location,
-                name: interview.name,
-                start: interview.start,
-                end: interview.end,
-              };
-            }),
+                  date: interview.date,
+                  location: interview.location,
+                  name: interview.name,
+                  start: interview.start,
+                  end: interview.end,
+                };
+              }),
+            },
+          },
+          include: {
+            position: true,
+            department: true,
+            interviews: {
+              include: {
+                interviewer: true,
+                interviewee: true,
+              },
+            },
+            documents: true,
           },
         },
-      });
+      );
       updates.push(interviewsUpdate);
     }
 
-    const [, candidate] = await Promise.all(updates);
-    return candidate;
+    const results = await Promise.all(updates);
+
+    return results.length === 2 ? results[1] : results[0];
   }
 }
