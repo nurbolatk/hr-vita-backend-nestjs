@@ -1,13 +1,17 @@
-import { Role } from '.prisma/client';
+import { Role, UserStatus } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
 import * as argon from 'argon2';
+import { ApprovalService } from 'src/approval/approval.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { SetPasswordDto } from './dto/set-password.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private approvalService: ApprovalService,
+  ) {}
 
   async setPassword(dto: SetPasswordDto) {
     const hash = await argon.hash(dto.password);
@@ -35,6 +39,7 @@ export class UserService {
         },
         documents: true,
         interviews: true,
+        myApprovals: true,
       },
     });
   }
@@ -53,15 +58,25 @@ export class UserService {
         },
         documents: true,
         interviews: true,
+        myApprovals: true,
       },
     });
   }
 
   async createUser(data: CreateUserDTO) {
     const parsed = await this.parseData(data);
-    return this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: parsed,
     });
+    if (user.status === UserStatus.NOT_ACCEPTED) {
+      this.approvalService.createMany([
+        {
+          departmentId: 1,
+          masterId: 1,
+          candidateId: user.id,
+        },
+      ]);
+    }
   }
 
   private async parseData(data: CreateUserDTO) {

@@ -96,11 +96,11 @@ model Approval {
   updatedAt    DateTime       @updatedAt
   department   Department     @relation(fields: [departmentId], references: [id])
   departmentId Int
-  master       User           @relation("master", fields: [masterId], references: [id])
-  masterId     Int
+  master       User?          @relation("master", fields: [masterId], references: [id])
+  masterId     Int?
   candidate    User           @relation("candidate", fields: [candidateId], references: [id])
   candidateId  Int
-  status       ApprovalStatus
+  status       ApprovalStatus @default(PENDING)
 
   @@map("approvals")
 }

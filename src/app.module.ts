@@ -10,6 +10,7 @@ import { InterviewModule } from './interview/interview.module';
 import { DocumentsModule } from './documents/documents.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { NotificationsModule } from './notifications/notifications.module';
+import { ApprovalModule } from './approval/approval.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { NotificationsModule } from './notifications/notifications.module';
       dest: './upload',
     }),
     NotificationsModule,
+    ApprovalModule,
   ],
 })
 export class AppModule {}
