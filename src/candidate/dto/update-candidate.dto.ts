@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsEmail,
   IsInt,
   IsOptional,
@@ -40,10 +41,6 @@ export class UpdateCandidateFormDTO {
   @IsString()
   @IsOptional()
   department?: string;
-
-  @IsInt()
-  @IsOptional()
-  documentId?: number;
 }
 
 export class UpdateCandidateDTO {
@@ -58,4 +55,8 @@ export class UpdateCandidateDTO {
   @Type(() => CreateInterviewDto)
   @IsOptional()
   interviews?: CreateInterviewDto[];
+
+  @IsArray()
+  @IsOptional()
+  documents?: number[];
 }

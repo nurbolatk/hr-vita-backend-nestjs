@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsEmail,
   IsInt,
   IsNotEmpty,
@@ -7,9 +8,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { CreateDepartmentDto } from 'src/department/dto/createDepartment.dto';
 import { CreateInterviewDto } from 'src/interview/dto/create-interview.dto';
-import { CreatePositionDto } from 'src/position/dto/create-position.dto';
 
 export class CreateCandidateDto {
   @IsString()
@@ -24,14 +23,10 @@ export class CreateCandidateDto {
   @IsNotEmpty()
   email: string;
 
-  // @ValidateNested()
-  // @Type(() => CreatePositionDto)
   @IsString()
   @IsNotEmpty()
   position: string;
 
-  // @ValidateNested()
-  // @Type(() => CreateDepartmentDto)
   @IsString()
   @IsNotEmpty()
   department: string;
@@ -55,7 +50,7 @@ export class CreateCandidateDto {
   @IsOptional()
   interviews?: CreateInterviewDto[];
 
-  @IsInt()
+  @IsArray()
   @IsOptional()
-  documentId?: number;
+  documents?: number[];
 }

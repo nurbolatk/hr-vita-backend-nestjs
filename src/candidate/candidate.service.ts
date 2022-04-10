@@ -50,17 +50,11 @@ export class CandidateService {
         },
         documents: {
           connect:
-            candidate.documentId === undefined
+            candidate.documents === undefined
               ? []
-              : [
-                  {
-                    id: candidate.documentId,
-                  },
-                ],
+              : candidate.documents.map((id) => ({ id })),
         },
       };
-
-      delete data.documentId;
 
       const newCandidate = await this.prisma.candidate.create({
         data,
@@ -104,46 +98,55 @@ export class CandidateService {
     });
   }
 
-  async update(id: number, data: UpdateCandidateDTO) {
-    const { form, interviews } = data;
+  async update(id: number, body: UpdateCandidateDTO) {
+    const { form, interviews, documents } = body;
+    console.log({ documents });
+
     const updates = [];
+    let data: any = {};
     if (form) {
-      const formUpdate = this.prisma.candidate.update({
-        where: { id },
-        data: {
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          salary: form.salary,
-          location: form.location,
-          phone: form.phone,
-          position: {
-            connectOrCreate: {
-              where: {
-                name: form.position,
-              },
-              create: {
-                name: form.position,
-              },
+      data = {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        salary: form.salary,
+        location: form.location,
+        phone: form.phone,
+        position: {
+          connectOrCreate: {
+            where: {
+              name: form.position,
             },
-          },
-          department: {
-            connectOrCreate: {
-              where: {
-                name: form.department,
-              },
-              create: {
-                name: form.department,
-              },
+            create: {
+              name: form.position,
             },
-          },
-          documents: {
-            set: form.documentId ? [{ id: form.documentId }] : [],
           },
         },
-      });
-      updates.push(formUpdate);
+        department: {
+          connectOrCreate: {
+            where: {
+              name: form.department,
+            },
+            create: {
+              name: form.department,
+            },
+          },
+        },
+      };
     }
+
+    if (documents) {
+      data.documents = {
+        set: documents.map((id) => ({ id })),
+      };
+    }
+    console.log(data);
+
+    const formUpdate = this.prisma.candidate.update({
+      where: { id },
+      data,
+    });
+    updates.push(formUpdate);
     if (interviews) {
       const interviewsUpdate = this.prisma.candidate.update({
         where: {

@@ -66,6 +66,7 @@ export class DocumentsController {
     return {
       ...file,
       id: newDoc.id,
+      name: newDoc.name,
     };
   }
 }
