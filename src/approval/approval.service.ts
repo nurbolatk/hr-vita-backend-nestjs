@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Approval } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateApprovalDTO } from './dto';
+import { CreateApprovalDTO, UpdateApprovalDTO } from './dto';
 
 @Injectable()
 export class ApprovalService {
@@ -18,11 +18,13 @@ export class ApprovalService {
                 id: data.departmentId,
               },
             },
-            master: {
-              connect: {
-                id: data.masterId,
-              },
-            },
+            master: data.masterId
+              ? {
+                  connect: {
+                    id: data.masterId,
+                  },
+                }
+              : undefined,
             candidate: {
               connect: {
                 id: data.candidateId,
@@ -32,5 +34,51 @@ export class ApprovalService {
         }),
       ),
     );
+  }
+
+  async getOnByCandidateId(candidateId: number) {
+    return this.prisma.approval.findMany({
+      where: {
+        candidateId,
+      },
+      include: {
+        department: true,
+        master: {
+          include: {
+            position: true,
+            department: true,
+          },
+        },
+        candidate: {
+          include: {
+            position: true,
+            department: true,
+          },
+        },
+      },
+    });
+  }
+
+  async update(id: number, data: UpdateApprovalDTO) {
+    return this.prisma.approval.update({
+      where: { id },
+      data: {
+        status: data.status,
+        master: data.masterId
+          ? {
+              connect: {
+                id: data.masterId,
+              },
+            }
+          : undefined,
+        department: data.departmentId
+          ? {
+              connect: {
+                id: data.departmentId,
+              },
+            }
+          : undefined,
+      },
+    });
   }
 }

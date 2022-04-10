@@ -67,11 +67,31 @@ export class UserService {
     const parsed = await this.parseData(data);
     const user = await this.prisma.user.create({
       data: parsed,
+      include: {
+        supervisor: {
+          include: {
+            department: true,
+          },
+        },
+      },
     });
     if (user.status === UserStatus.NOT_ACCEPTED) {
       this.approvalService.createMany([
         {
+          departmentId: 5,
+          candidateId: user.id,
+        },
+        {
+          departmentId: user.supervisor.departmentId,
+          masterId: user.supervisor.id,
+          candidateId: user.id,
+        },
+        {
           departmentId: 1,
+          candidateId: user.id,
+        },
+        {
+          departmentId: 2,
           masterId: 1,
           candidateId: user.id,
         },
