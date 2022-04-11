@@ -73,6 +73,7 @@ export class UserService {
             department: true,
           },
         },
+        documents: true,
       },
     });
     if (user.status === UserStatus.NOT_ACCEPTED) {
@@ -177,6 +178,16 @@ export class UserService {
         documents: {
           set: documents.map((id) => ({ id })),
         },
+      },
+      include: {
+        position: true,
+        department: true,
+        supervisor: {
+          include: {
+            department: true,
+          },
+        },
+        documents: true,
       },
     });
   }

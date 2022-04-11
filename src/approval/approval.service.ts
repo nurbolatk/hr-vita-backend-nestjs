@@ -82,6 +82,9 @@ export class ApprovalService {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 
