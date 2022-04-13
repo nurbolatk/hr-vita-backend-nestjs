@@ -14,7 +14,7 @@ async function departments() {
     where: { id: 2 },
     update: {},
     create: {
-      name: 'Управленческий отдел',
+      name: 'Руководство',
     },
   });
   await prisma.department.upsert({
@@ -111,6 +111,7 @@ async function employees() {
       lastName: 'Абкенов',
       hash,
       salary: 500000,
+      status: 'WORKING',
 
       position: {
         connect: {
@@ -126,17 +127,42 @@ async function employees() {
   });
 
   await prisma.user.upsert({
+    where: { email: 'dota.aibek.dota@gmail.com' },
+    update: {},
+    create: {
+      email: 'dota.aibek.dota@gmail.com',
+      firstName: 'Айбек',
+      lastName: 'Айбеков',
+      hash,
+      salary: 500000,
+      status: 'WORKING',
+      position: {
+        connect: {
+          id: 1,
+        },
+      },
+      department: {
+        connect: {
+          id: 1,
+        },
+      },
+      role: 'HR',
+    },
+  });
+
+  await prisma.user.upsert({
     where: { email: 'nurbolat.kenzhekulov@gmail.com' },
     update: {},
     create: {
       email: 'nurbolat.kenzhekulov@gmail.com',
-      firstName: 'Nurbolat',
-      lastName: 'Kenzhekulov',
+      firstName: 'Нурболат',
+      lastName: 'Нурболатов',
       hash,
       salary: 500000,
+      status: 'WORKING',
       position: {
         connect: {
-          id: 1,
+          id: 2,
         },
       },
       department: {
@@ -157,6 +183,7 @@ async function employees() {
       lastName: 'Дауренов',
       hash,
       salary: 500000,
+      status: 'WORKING',
       position: {
         connect: {
           id: 3,
@@ -179,6 +206,7 @@ async function employees() {
       lastName: 'Жексенов',
       hash,
       salary: 500000,
+      status: 'WORKING',
       position: {
         connect: {
           id: 5,
@@ -201,6 +229,7 @@ async function employees() {
       lastName: 'Тореали',
       hash,
       salary: 500000,
+      status: 'WORKING',
       position: {
         connect: {
           id: 7,
@@ -289,11 +318,11 @@ async function documents() {
     where: { id: 1 },
     update: {},
     create: {
-      originalname: 'quote.jpeg',
-      name: 'Photo',
+      originalname: 'pexels-photo-2379004.jpeg',
+      name: 'Фото',
       mimetype: 'image/jpeg',
-      path: 'uploads/file_1649397262368.jpeg',
-      size: 87460,
+      path: 'documents/file_1649647917574.jpeg',
+      size: 53849,
       candidate: {
         connect: {
           id: 2,
