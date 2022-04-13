@@ -160,7 +160,15 @@ export class InterviewService {
           label: 'More',
         },
       });
-    } else {
+      return updated;
+    }
+
+    if (
+      updated.location === old.location &&
+      updated.date === old.date &&
+      updated.start === old.start &&
+      updated.end === old.end
+    ) {
       this.notificationsService.createNotification({
         title: 'Детали интервью изменены',
         content: `
@@ -177,6 +185,7 @@ export class InterviewService {
         },
       });
     }
+
     return updated;
   }
 
