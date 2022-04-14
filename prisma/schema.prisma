@@ -42,7 +42,6 @@ enum Role {
 model Document {
   id           Int        @id @default(autoincrement())
   createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
   name         String
   originalname String
   mimetype     String
@@ -79,8 +78,9 @@ model User {
   supervisor         User?          @relation("Supervisor", fields: [supervisorId], references: [id])
   supervisorId       Int?
   supervisee         User[]         @relation("Supervisor")
-  masteringApprovals Approval[]     @relation("master")
-  myApprovals        Approval[]     @relation("candidate")
+  masteringApprovals Approval[]     @relation("masteringApprovals")
+  myApprovals        Approval[]     @relation("candidateApprovals")
+  candidate          Candidate?
 
   @@map("users")
 }
@@ -97,9 +97,9 @@ model Approval {
   updatedAt    DateTime       @updatedAt
   department   Department     @relation(fields: [departmentId], references: [id])
   departmentId Int
-  master       User?          @relation("master", fields: [masterId], references: [id])
+  master       User?          @relation("masteringApprovals", fields: [masterId], references: [id])
   masterId     Int?
-  candidate    User           @relation("candidate", fields: [candidateId], references: [id])
+  candidate    User           @relation("candidateApprovals", fields: [candidateId], references: [id])
   candidateId  Int
   status       ApprovalStatus @default(PENDING)
 
@@ -129,6 +129,8 @@ model Candidate {
   department   Department      @relation(fields: [departmentId], references: [id])
   departmentId Int
   documents    Document[]
+  user         User?           @relation(fields: [userId], references: [id])
+  userId       Int?            @unique
 
   @@map("candidates")
 }
