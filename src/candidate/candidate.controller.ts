@@ -14,6 +14,7 @@ import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { CandidateService } from './candidate.service';
 import { CreateCandidateDto } from './dto';
+import { UpdateCandidateStatusDTO } from './dto/update-candidate-status.dto';
 import { UpdateCandidateDTO } from './dto/update-candidate.dto';
 
 @Controller('candidate')
@@ -57,5 +58,16 @@ export class CandidateController {
       );
     }
     return this.service.update(id, data);
+  }
+
+  @Put(':id/status')
+  async updateStatus(@Param() params, @Body() data: UpdateCandidateStatusDTO) {
+    const id = parseInt(params.id as string);
+    if (isNaN(id)) {
+      throw new NotFoundException(
+        'Could not find a candidate with id ' + params.id,
+      );
+    }
+    return this.service.updateStatus(id, data);
   }
 }
