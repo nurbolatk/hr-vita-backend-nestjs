@@ -285,7 +285,7 @@ export class CandidateService {
           firstName: updated.firstName,
           lastName: updated.lastName,
           location: updated.location,
-          salary: updated.salary,
+          salary: updated.salary ?? 0,
           phone: updated.phone,
           position: {
             connectOrCreate: {
