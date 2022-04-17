@@ -5,6 +5,7 @@ import { ApprovalService } from 'src/approval/approval.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { SetPasswordDto } from './dto/set-password.dto';
+import { UpdateMeDTO } from './dto/update-me-dto';
 
 @Injectable()
 export class UserService {
@@ -188,6 +189,75 @@ export class UserService {
           },
         },
         documents: true,
+      },
+    });
+  }
+
+  async searchUser(query: string) {
+    console.log({ query });
+
+    const res = await this.prisma.user.findMany({
+      where: {
+        OR: [
+          {
+            firstName: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+          {
+            lastName: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+          // {
+          //   position: {
+          //     name: {
+          //       contains: query,
+          //     },
+          //   },
+          // },
+        ],
+      },
+      include: {
+        position: true,
+        department: true,
+        supervisor: {
+          include: {
+            position: true,
+            department: true,
+          },
+        },
+        documents: true,
+        interviews: true,
+        myApprovals: true,
+      },
+    });
+
+    console.log(res);
+
+    return res;
+  }
+
+  async updateMe(id: number, data: UpdateMeDTO) {
+    return this.prisma.user.update({
+      where: {
+        id,
+      },
+      data,
+      include: {
+        position: true,
+        department: true,
+        supervisor: {
+          include: {
+            position: true,
+            department: true,
+          },
+        },
+        documents: true,
+        interviews: true,
+        myApprovals: true,
       },
     });
   }
