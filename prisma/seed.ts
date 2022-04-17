@@ -2,6 +2,8 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 import * as argon from 'argon2';
 
+import { displayDay, displayTime } from '../src/utils';
+
 async function departments() {
   await prisma.department.upsert({
     where: { id: 1 },
@@ -313,13 +315,13 @@ async function candidates() {
 }
 
 async function interviews() {
-  await prisma.interview.upsert({
+  const updated = await prisma.interview.upsert({
     where: {
       id: 1,
     },
     update: {},
     create: {
-      location: 'Almaty office, 440 room',
+      location: 'офис Алматы, каб 440',
       interviewee: {
         connect: {
           id: 2,
@@ -327,13 +329,54 @@ async function interviews() {
       },
       interviewer: {
         connect: {
-          email: 'daulet@gmail.com',
+          email: 'dota.aibek.dota@gmail.com',
         },
       },
       date: new Date(),
       start: new Date(),
       end: new Date(),
-      name: 'First HR interview',
+      name: 'Первое HR интервью',
+    },
+
+    include: {
+      interviewee: {
+        include: {
+          position: true,
+        },
+      },
+      interviewer: {
+        include: {
+          position: true,
+        },
+      },
+    },
+  });
+
+  await prisma.notification.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      title: 'Вы будете проводить интервью!',
+      content: `
+      Интервью нового кандидата ${updated.interviewee.firstName} ${
+        updated.interviewee.lastName
+      } на позицию ${updated.interviewee.position.name}, который пройдет в ${
+        updated.location
+      } ${displayDay(updated.date)} с ${displayTime(
+        updated.start,
+      )} до ${displayTime(updated.end)} проведет другой сотрудник.
+      `,
+      receiver: {
+        connect: {
+          email: 'dota.aibek.dota@gmail.com',
+        },
+      },
+      linkAction: {
+        create: {
+          to: `/interviews/${updated.id}`,
+          label: 'More',
+        },
+      },
     },
   });
 }
