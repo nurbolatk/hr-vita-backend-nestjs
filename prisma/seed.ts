@@ -132,10 +132,15 @@ async function employees() {
     create: {
       email: 'dota.aibek.dota@gmail.com',
       firstName: 'Айбек',
-      lastName: 'Айбеков',
+      lastName: 'Альжан',
       hash,
       salary: 500000,
       status: 'WORKING',
+      supervisor: {
+        connect: {
+          email: 'abylay@gmail.com',
+        },
+      },
       position: {
         connect: {
           id: 1,
@@ -155,11 +160,16 @@ async function employees() {
     update: {},
     create: {
       email: 'nurbolat.kenzhekulov@gmail.com',
-      firstName: 'Нурболат',
-      lastName: 'Нурболатов',
+      firstName: 'Алмас',
+      lastName: 'Максатов',
       hash,
       salary: 500000,
       status: 'WORKING',
+      supervisor: {
+        connect: {
+          email: 'dota.aibek.dota@gmail.com',
+        },
+      },
       position: {
         connect: {
           id: 2,
@@ -184,6 +194,11 @@ async function employees() {
       hash,
       salary: 500000,
       status: 'WORKING',
+      supervisor: {
+        connect: {
+          email: 'abylay@gmail.com',
+        },
+      },
       position: {
         connect: {
           id: 3,
@@ -207,6 +222,11 @@ async function employees() {
       hash,
       salary: 500000,
       status: 'WORKING',
+      supervisor: {
+        connect: {
+          email: 'abylay@gmail.com',
+        },
+      },
       position: {
         connect: {
           id: 5,
@@ -230,6 +250,11 @@ async function employees() {
       hash,
       salary: 500000,
       status: 'WORKING',
+      supervisor: {
+        connect: {
+          email: 'abylay@gmail.com',
+        },
+      },
       position: {
         connect: {
           id: 7,

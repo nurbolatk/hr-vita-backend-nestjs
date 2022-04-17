@@ -6,12 +6,14 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { SetPasswordDto } from './dto/set-password.dto';
+import { UpdateMeDTO } from './dto/update-me-dto';
 import { UserService } from './user.service';
 
 @Controller('users')
@@ -22,6 +24,17 @@ export class UserController {
   @Get('me')
   getMe(@GetUser() user: User) {
     return user;
+  }
+
+  @UseGuards(JwtGuard)
+  @Put('me')
+  updateMe(@GetUser() user: User, @Body() body: UpdateMeDTO) {
+    return this.userService.updateMe(user.id, body);
+  }
+
+  @Get('search')
+  search(@Query('query') query: string): Promise<User[]> {
+    return this.userService.searchUser(query);
   }
 
   @Get(':id')
