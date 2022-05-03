@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { Approval } from '@prisma/client';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateApprovalDTO, UpdateApprovalDTO } from './dto';
+import {
+  CreateApprovalDTO,
+  CreateOneApprovalDTO,
+  UpdateApprovalDTO,
+} from './dto';
 
 @Injectable()
 export class ApprovalService {
@@ -62,6 +66,51 @@ export class ApprovalService {
     );
   }
 
+  async createOne(data: CreateOneApprovalDTO): Promise<Approval> {
+    const approval = await this.prisma.approval.create({
+      data: {
+        department: {
+          connect: {
+            name: data.department,
+          },
+        },
+        master: data.masterId
+          ? {
+              connect: {
+                id: data.masterId,
+              },
+            }
+          : undefined,
+        candidate: {
+          connect: {
+            id: data.candidateId,
+          },
+        },
+      },
+      include: {
+        candidate: {
+          include: {
+            position: true,
+          },
+        },
+      },
+    });
+    if (data.masterId) {
+      this.notificationsService.createNotification({
+        title: 'Вам нужно согласовать введение в должность нового сотрудника',
+        content: `
+          Вам нужно согласовать введение в должность нового сотрудника ${approval.candidate.firstName} ${approval.candidate.lastName} на позицию ${approval.candidate.position.name}.
+      `,
+        receiverId: data.masterId,
+        linkAction: {
+          to: `/approvals/${approval.id}`,
+          label: 'More',
+        },
+      });
+    }
+    return approval;
+  }
+
   async getOneByCandidateId(candidateId: number) {
     return this.prisma.approval.findMany({
       where: {
@@ -83,7 +132,7 @@ export class ApprovalService {
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        id: 'asc',
       },
     });
   }
@@ -153,5 +202,13 @@ export class ApprovalService {
       });
     }
     return approval;
+  }
+
+  async delete(id: number) {
+    return this.prisma.approval.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
