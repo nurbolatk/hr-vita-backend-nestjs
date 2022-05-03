@@ -18,7 +18,7 @@ export class UserService {
     const hash = await argon.hash(dto.password);
     const updated = await this.prisma.user.update({
       where: {
-        id: dto.userId,
+        email: dto.email,
       },
       data: {
         hash,
@@ -89,12 +89,12 @@ export class UserService {
           candidateId: user.id,
         },
         {
-          departmentId: 1,
+          departmentId: 2,
+          masterId: 1,
           candidateId: user.id,
         },
         {
-          departmentId: 2,
-          masterId: 1,
+          departmentId: 1,
           candidateId: user.id,
         },
       ]);
@@ -194,8 +194,6 @@ export class UserService {
   }
 
   async searchUser(query: string) {
-    console.log({ query });
-
     const res = await this.prisma.user.findMany({
       where: {
         OR: [
@@ -234,8 +232,6 @@ export class UserService {
         myApprovals: true,
       },
     });
-
-    console.log(res);
 
     return res;
   }

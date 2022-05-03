@@ -1,5 +1,11 @@
 import { ApprovalStatus } from '.prisma/client';
-import { IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateApprovalDTO {
   @IsInt()
@@ -17,4 +23,17 @@ export class CreateApprovalDTO {
   @IsEnum(ApprovalStatus)
   @IsOptional()
   status?: ApprovalStatus;
+}
+export class CreateOneApprovalDTO {
+  @IsString()
+  @IsNotEmpty()
+  department: string;
+
+  @IsInt()
+  @IsOptional()
+  masterId?: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  candidateId: number;
 }

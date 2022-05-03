@@ -1,7 +1,20 @@
 import { Approval } from '.prisma/client';
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApprovalService } from './approval.service';
-import { CreateApprovalDTO, UpdateApprovalDTO } from './dto';
+import {
+  CreateApprovalDTO,
+  CreateOneApprovalDTO,
+  UpdateApprovalDTO,
+} from './dto';
 
 @Controller('approvals')
 export class ApprovalController {
@@ -10,6 +23,11 @@ export class ApprovalController {
   @Post()
   async createMany(@Body() body: CreateApprovalDTO[]): Promise<Approval[]> {
     return this.service.createMany(body);
+  }
+
+  @Post('one')
+  async create(@Body() body: CreateOneApprovalDTO): Promise<Approval> {
+    return this.service.createOne(body);
   }
 
   @Get('candidate/:candidateId')
@@ -31,5 +49,11 @@ export class ApprovalController {
   async getOneById(@Param() params): Promise<Approval> {
     const id = parseInt(params.id as string);
     return this.service.getOneById(id);
+  }
+
+  @Delete(':id')
+  async delete(@Param() params): Promise<Approval> {
+    const id = parseInt(params.id as string);
+    return this.service.delete(id);
   }
 }

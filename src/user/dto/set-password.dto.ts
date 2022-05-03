@@ -1,10 +1,12 @@
-import { IsInt, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class SetPasswordDto {
   @IsString()
-  @MinLength(3)
+  @MinLength(6)
+  @IsNotEmpty()
   password: string;
 
-  @IsInt()
-  userId: number;
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 }

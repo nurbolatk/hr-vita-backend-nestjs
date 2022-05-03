@@ -26,8 +26,6 @@ export class DocumentsController {
     @Param() { filepath }: { filepath: string },
     @Response({ passthrough: true }) res,
   ): StreamableFile {
-    console.log(filepath);
-
     const file = createReadStream(
       join(process.cwd(), './documents/' + filepath),
     );
@@ -46,8 +44,6 @@ export class DocumentsController {
       storage: diskStorage({
         destination: './documents',
         filename: function (req, file, callback) {
-          console.log(file);
-
           callback(
             null,
             file.fieldname + '_' + Date.now() + extname(file.originalname),

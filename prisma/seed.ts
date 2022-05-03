@@ -16,7 +16,7 @@ async function departments() {
     where: { id: 2 },
     update: {},
     create: {
-      name: 'Руководство',
+      name: 'Администрация',
     },
   });
   await prisma.department.upsert({
