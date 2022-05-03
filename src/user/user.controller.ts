@@ -48,16 +48,8 @@ export class UserController {
     return this.userService.createUser(data);
   }
 
-  @UseGuards(JwtGuard)
   @Post('change-password')
-  setPassword(
-    @Body() dto: SetPasswordDto,
-    @GetUser() user: User,
-  ): Promise<User> {
-    console.log({
-      dto,
-      user,
-    });
+  setPassword(@Body() dto: SetPasswordDto): Promise<User> {
     // TODO: check if user has permissions
     return this.userService.setPassword(dto);
   }

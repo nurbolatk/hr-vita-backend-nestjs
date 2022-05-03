@@ -18,7 +18,7 @@ export class UserService {
     const hash = await argon.hash(dto.password);
     const updated = await this.prisma.user.update({
       where: {
-        id: dto.userId,
+        email: dto.email,
       },
       data: {
         hash,
